@@ -1,10 +1,25 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 import redis
 from redis.client import Redis
 
 from models import ItemPayload
 
 app = FastAPI()
+
+# allow requests from frontend
+origins = [
+    'http://localhost:5173'
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=['GET', 'POST', 'DELETE'],
+    allow_headers=['*'],
+)
+
 redis_client: Redis[str] = redis.StrictRedis(
     host='0.0.0.0', port=6379, db=0, decode_responses=True)
 
