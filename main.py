@@ -99,6 +99,15 @@ def list_items() -> dict[str, list[ItemPayload]]:
         )
 
     return {"items": items}
+# Route to delete item id based on its name
+
+
+@app.delete("/items/{item_name}")
+def delete_by_name(item_name: str) -> dict[str, str] | None:
+    item_id: str | None = redis_client.hget("item_name_to_id", item_name)
+    if not item_id:
+        return None
+    return delete_item(int(item_id))
 
 # Route to delete a specific item by ID
 
